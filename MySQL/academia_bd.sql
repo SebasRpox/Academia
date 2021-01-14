@@ -1,4 +1,4 @@
-USE academia;
+USE academia; --ba2jszpnkdeo2kx4dbda
 
 DROP TABLE IF EXISTS tipo_documento;
 DROP TABLE IF EXISTS tipo_actores;
@@ -17,10 +17,23 @@ CREATE TABLE tipo_actores(
     PRIMARY KEY (id)
 );
 
+INSERT INTO tipo_actores VALUES(1,'Alumno');
+INSERT INTO tipo_actores(perfil) VALUES('Docente');
+INSERT INTO tipo_actores(perfil) VALUES('Rector'),('Coordinador');
+SELECT * FROM tipo_actores;
+
+UPDATE tipo_actores SET perfil = 'Estudiante' WHERE id = 1;
+
+DELETE FROM tipo_actores WHERE id = 1;
+TRUNCATE tipo_actores;
+DELETE FROM tipo_actores;
+
+SELECT perfil, id, NOW() FROM tipo_actores;
+
 CREATE TABLE estado_actores(
     id INTEGER(5) UNSIGNED PRIMARY KEY AUTO_INCREMENT,
     estado VARCHAR(30) 
-) ENGINE=MyISAM;
+) ENGINE=InnoDB;
 
 CREATE TABLE modulos(
     id INT(5),
@@ -49,10 +62,15 @@ CREATE TABLE actores(
     numero_expediente VARCHAR(255) NOT NULL UNIQUE,
     genero ENUM('hombre','mujer') NOT NULL,
     fecha_nacimiento DATE NOT NULL,
-    estado_actor_id INT(5),
+    estado_actor_id INT(5) UNSIGNED,
     institucion_id INT(5),
-    tipo_actor_id INT(5),
+    tipo_actor_id INT(5) UNSIGNED,
     fecha_creacion TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     fecha_actualizacion TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    CONSTRAINT `fk_estado_actor` FOREIGN KEY `estado_actor_id` REFERENCES `estado_actores`(`id`)    
-) ENGINE=InnoDB;
+    FOREIGN KEY (tipo_actor_id) REFERENCES tipo_actores(id)
+) ENGINE= InnoDB;
+
+ALTER TABLE actores
+ADD CONSTRAINT `fk_estado_actor` 
+FOREIGN KEY (`estado_actor_id`) 
+REFERENCES `estado_actores`(`id`);
