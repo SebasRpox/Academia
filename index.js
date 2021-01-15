@@ -1,8 +1,13 @@
 const express = require("express");
 const morgan = require("morgan");
 const app = express();
+const actores = require("./routes/actores");
+require("dotenv").config();
 
 app.use(morgan("dev"));
+
+//Routes
+app.use("/api/", actores);
 
 app.get('/', (req, res)=>{
     res.send("<h1>API Academia Geek</h1>");
@@ -14,6 +19,8 @@ app.get('/estudiantes', (req, res)=>{
     res.json(estudiantes);
 });
 
-app.listen(8083, function(){
-    console.log("Aplicacion abierta en el puerto 8083!");
+app.set("port", process.env.PORT || 5000)
+
+app.listen(app.get("port"), ()=>{
+    console.log(`Aplicación corriendo en el puerto ${app.get("port")}!!`);
 });
